@@ -39,7 +39,7 @@ print(diz)
 varian = df.agg(diz)
 varian.show()
 
-# lo porto in andas
+# lo porto in Pandas
 
 varian_pandas = varian.toPandas()
 
