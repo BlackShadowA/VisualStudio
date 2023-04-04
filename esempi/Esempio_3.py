@@ -6,8 +6,8 @@ from transforms.api import transform_df, Input, Output
 
 @transform_df(
     Output("/uci/uprice_investimenti/prioritizzato/datasets/p002_tfa"),
-    stock=Input("ri.foundry.main.dataset.4d14fb5a-c904-4720-b6a2-65a4fa1a631d"),
-    flussi=Input("ri.foundry.main.dataset.0ed51275-63ab-4856-a52f-b00ed7b9e739")
+    stock=Input("/uci/cido_consumer/Volumes & Sales/Data/cbk_volume_sales_balance_tot_asset_loans_globe"),
+    flussi=Input("/uci/cido_consumer/Volumes & Sales/Data/cbk_volume_sales_movements_tot_asset_globe")
 )
 def compute(stock, flussi):
     max_snap = stock.agg(F.max("snapshot_date")).collect()[0][0]
