@@ -106,3 +106,7 @@ def compute(stock, flussi):
         .drop(*["flussi_snapshot_date", "stock_snapshot_date", "impieghi_snapshot_date"])
     )
     return db_final
+
+
+
+
