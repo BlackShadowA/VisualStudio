@@ -5,6 +5,7 @@ from pyspark.sql.session import SparkSession
 import pandas as pd
 from pyspark.sql import functions as F
 
+#Spark Ui http://localhost:4040
 spark = SparkSession\
     .builder\
     .appName("PySpark XGBOOST Native")\
