@@ -62,7 +62,7 @@ model = modello.fit(df_)
 
 # predict on test data
 predict_df = model.transform(df_)
-predict_df.show()
+predict_df.show(truncate= False)
 
 
 
