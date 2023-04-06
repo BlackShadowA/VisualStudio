@@ -29,7 +29,7 @@ def my_compute_function(tCLP):
     return tCLP.filter(F.col("snapshot_date") == max_date)
 
 
-oppure hai una libreria
+# oppure hai una libreria
 
 from pythonutils import dataframeutils
 
