@@ -13,5 +13,6 @@ for nf in variabili_numeriche:
 print(diz)
 
 
-
+'''
 {'label': 'variance', 'fl_prestito_in_essere': 'variance', 'fl_prestito_estinto_24m': 'variance', 'fl_prestito_estinto_24m_anticipatamente': 'variance'
+'''

@@ -9,6 +9,7 @@ def my_compute_function(my_input):
 
     return aggregation
 
+'''
 #Esempio generale:
 #ho il seguente dataframes:
 
@@ -21,6 +22,7 @@ def my_compute_function(my_input):
 |  b|  2| 234| 23|
 |  b|  2| 785| 12|
 +---+---+----+---+
+'''
 
 #Aggrego con condizione sulla colonna x
 
@@ -31,11 +33,11 @@ df_new = df.groupBy("id").agg(
 
 df_new.show()
 
-
+'''
 +---+-----+----+----+
 | id| col1|col2|col3|
 +---+-----+----+----+
 |  1|841.0|   1|2328|
 |  2|  0.0|   2|1019|
 +---+-----+----+----+
-
+'''

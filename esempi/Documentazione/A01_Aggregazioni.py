@@ -6,6 +6,7 @@ Primo metodo :
 
 carte = [F.sum(c).alias(c) for c in df.columns if c.startswith("n_ope_carte_")]
 conto = [F.sum(c).alias(c) for c in df.columns if c.startswith("n_ope_conto_")]
+
 cluster1 = (
     df
     .groupBy("secondario")
@@ -69,9 +70,7 @@ aggregazione = ll.groupby('ndg')\
 
 aggregazione.show()
 
-
- 
- '''
+'''
 Adesso vediamo altri esempi
 Una cosa vista fare da Prometia ,spesso hai da fare molte aggregazioni insieme ,esempio sum,min,max ecc.In più spesso dei fare delle aggregazioni con dei when .Vedrai due esempi li devi vedere entrambi importantissimo.
 Primo esempio più aggregazioni:
@@ -80,6 +79,7 @@ ho questo dataframes
 df = spark.createDataFrame([(1, 2, 3), (1, 4, 5)], ("x", "y", "z"))
 df.show()
 
+'''
 +---+---+---+
 |  x|  y|  z|
 +---+---+---+
@@ -87,7 +87,6 @@ df.show()
 |  1|  4|  5|
 +---+---+---+
 
-'''
 Voglio schiacciare per chiave x è crearmi tante operazioni di somma e conteggio ed il massimo , un nuovo modo per farlo è prima mi crevo ,guardalo bene questo un item:
 '''
 from pyspark.sql import functions as F
@@ -98,26 +97,25 @@ cols = ["y", "z"]
 print([f(c).alias(f'{c}_{f.__name__}') for c in cols for f in funs])
 '''
 ecco l’output:
-'''
 
 [Column<b'sum(y) AS `y_sum`'>, Column<b'min(y) AS `y_min`'>, Column<b'max(y) AS `y_max`'>, Column<b'sum(z) AS `z_sum`'>, Column<b'min(z) AS `z_min`'>, Column<b'max(z) AS `z_max`'>]
 
-'''
 Come vedi il tipo è di questo tipo Column<b'sum(y) AS `y_sum`'>
-
 Questo item lo metto nella funzione di aggregazione:
 
 '''
 
 df = df.groupBy("x")\
        .agg(*[f(c).alias(f'{c}_{f.__name__}') for c in cols for f in funs])
+
+'''
 +---+-----+-----+-----+-----+-----+-----+
 |  x|y_sum|y_min|y_max|z_sum|z_min|z_max|
 +---+-----+-----+-----+-----+-----+-----+
 |  1|    6|    2|    4|    8|    3|    5|
 +---+-----+-----+-----+-----+-----+-----+
 
-'''
+
 Come vedi ha fatto molte aggregazione .
 
 Secondo esempio più aggregazioni con when:
@@ -133,6 +131,7 @@ my_dict = {
 dataF = spark.createDataFrame(pd.DataFrame(my_dict))
 dataF.show()
 
+'''
 +------------+------------------+---------+
 |customer_key|         categoria|richiesto|
 +------------+------------------+---------+
@@ -141,6 +140,7 @@ dataF.show()
 |         001|   regular_incomes|        0|
 |         002|occasional_incomes|        5|
 +------------+------------------+---------+
+'''
 
 '''
 Una cosa che spesso si fa è crearsi tante colonne per le varie categorie (when) .Vediamo passo passo cosa fa Prometei per aggregare.
@@ -158,8 +158,10 @@ filters= filters_in + filters_out + filters_tot
 
 print(filters)
 
+'''
 ecco l’output:
 [('all', 'in'), ('regular_incomes', 'in'), ('occasional_incomes', 'in'), ('all', 'out'), ('pippo', 'out'), ('pluto', 'out'), ('all', 'tot'), ('private_money_transfer', 'tot')]
+'''
 
 '''
 Adesso si creano una serie di funzioni per creare il tipo da inserire in agg.vediamo passo per passo

@@ -4,7 +4,7 @@
 
 
 
-
+'''
 CASE
     WHEN  FLOOR(DATEDIFF(current_date(), date_of_birth) / 365.25) < 0 THEN '99 - Others'
     WHEN  FLOOR(DATEDIFF(current_date(), date_of_birth) / 365.25)  < 14 THEN '1 - Minorenni 0-13'
@@ -18,3 +18,4 @@ CASE
     WHEN  FLOOR(DATEDIFF(current_date(), date_of_birth) / 365.25)  >= 75 THEN '9 - Anziani 75+'
     ELSE '99 - Others'
 END as cust_age_class
+'''

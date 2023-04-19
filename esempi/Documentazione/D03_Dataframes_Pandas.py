@@ -1,4 +1,7 @@
-à Primo metodo:
+'''
+# Primo metodo:
+'''
+
 import pandas as pd
  
 # initialise data of lists.
@@ -11,8 +14,9 @@ df = pd.DataFrame(data)
 # Print the output.
 df
 
-
+'''
 # Secondo metodo:
+'''
 
 # Import pandas library
 import pandas as pd
