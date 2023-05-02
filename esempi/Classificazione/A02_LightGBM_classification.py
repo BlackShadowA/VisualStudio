@@ -1,6 +1,8 @@
 import pandas as pd
 import lightgbm as lgb
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+import seaborn as sns 
 
 df = pd.read_excel("C:\\Travaux_2012\\Esempi_python\\dataset\\ccdata.xls")
 print(df)
@@ -38,3 +40,12 @@ gbm.fit(X_train, y_train,
         eval_set=[(X_test, y_test)],
         eval_metric='AUC',
         early_stopping_rounds=1000)
+
+
+feature_imp = pd.DataFrame({'Value':gbm.feature_importances_,'Feature':X_train.columns})
+plt.figure(figsize=(20, 10))
+sns.set(font_scale = 2)
+sns.barplot(x="Value", y="Feature", data=feature_imp.sort_values(by="Value", ascending=False)[:20])
+plt.title('LightGBM Features Importance')
+plt.tight_layout()
+plt.show()
