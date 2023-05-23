@@ -23,7 +23,7 @@ from pyspark.sql import functions as F
 
 class SparkDataFrameAverages:
     def __init__(self):
-        print("classe non istanziata")
+        self
 
     def calculate_averages(self, input_df):
         # Seleziona solo le colonne numeriche
