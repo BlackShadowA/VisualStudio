@@ -28,7 +28,7 @@ class SparkDataFrameAverages:
     def calculate_averages(self, input_df):
         # Seleziona solo le colonne numeriche
         numeric_cols = [
-            col for col, dtype in input_df.dtypes if dtype in ('int', 'bigint', 'float', 'double')
+            col for col, dtype in input_df.dtypes if (dtype in ('int', 'bigint', 'float', 'double')) &  (col not in ('id'))
         ]
         
         # Calcola le medie delle colonne numeriche
