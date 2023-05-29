@@ -4,11 +4,11 @@ from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 import seaborn as sns 
 
-df = pd.read_excel("C:\\Travaux_2012\\Esempi_python\\dataset\\ccdata.xls")
+df = pd.read_excel("C:\\Travaux_2012\\Esempi_python\\ccdata.xls")
 print(df)
 
 y = df['default payment next month']
-df = df.drop('default payment next month', axis = 1)  
+df = df.drop('default payment next month', axis = 1) 
 
 #Per adesso elimino le colonne categoriche
 column_string = [ col  for col, dt in df.dtypes.items() if dt == object]

@@ -11,7 +11,7 @@ from sklearn.metrics import accuracy_score, roc_curve
 from sklearn import metrics
 
 
-df = pd.read_excel("C:\\Travaux_2012\\Esempi_python\\dataset\\ccdata.xls")
+df = pd.read_excel("C:\\Travaux_2012\\Esempi_Python\\ccdata.xls")
 print(df)
 
 y = df['default payment next month']
