@@ -2,7 +2,7 @@ import pandas as pd
 import xgboost as xgb
 from sklearn.model_selection import train_test_split
 
-df = pd.read_excel("C:\\Travaux_2012\\Esempi_python\\dataset\\ccdata.xls")
+df = pd.read_excel("C:\\Travaux_2012\\Esempi_Python\\ccdata.xls")
 print(df)
 
 y = df['default payment next month']

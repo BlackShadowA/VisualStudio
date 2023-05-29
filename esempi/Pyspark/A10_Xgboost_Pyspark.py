@@ -17,7 +17,7 @@ print(f"Versione Pyspark = {spark.version}")
 
 
 import pandas as pd
-df = pd.read_excel("C:\\Travaux_2012\\Esempi_python\\dataset\\ccdata.xls")
+df = pd.read_excel("C:\\Travaux_2012\\Esempi_python\\ccdata.xls")
 
 #Per adesso elimino le colonne categoriche
 column_string = [ col  for col, dt in df.dtypes.items() if dt == object] + ['ID']
