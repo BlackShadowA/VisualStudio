@@ -8,7 +8,8 @@ from pyspark.sql import functions as F
 #Spark Ui http://localhost:4040
 from pyspark.sql.session import SparkSession
 import pyspark
-
+import os
+os.environ["HADOOP_HOME"]= 'C:\\Travaux_2012\\Anaconda e Python\\hadoop-2.8.1'
 
 spark = SparkSession\
     .builder\

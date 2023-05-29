@@ -1,6 +1,8 @@
 import findspark
 findspark.init()
 from pyspark.sql import SparkSession
+import os
+os.environ["HADOOP_HOME"]= 'C:\\Travaux_2012\\Anaconda e Python\\hadoop-2.8.1'
 
 # Crea la sessione Spark
 spark = SparkSession.builder.getOrCreate()

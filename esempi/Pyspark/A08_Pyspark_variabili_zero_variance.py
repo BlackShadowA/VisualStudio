@@ -7,7 +7,8 @@ from pyspark.sql.functions import udf
 from pyspark.sql.types import IntegerType, StructField, FloatType
 from pyspark.sql.session import SparkSession
 import pyspark
-
+import os
+os.environ["HADOOP_HOME"]= 'C:\\Travaux_2012\\Anaconda e Python\\hadoop-2.8.1'
 
 spark = SparkSession\
     .builder\

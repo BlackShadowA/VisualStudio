@@ -8,6 +8,8 @@ from pyspark.sql.types import IntegerType, StructField, FloatType
 
 import pyspark
 from pyspark.sql.session import SparkSession
+import os
+os.environ["HADOOP_HOME"]= 'C:\\Travaux_2012\\Anaconda e Python\\hadoop-2.8.1'
 
 '''
 import os
