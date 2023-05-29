@@ -7,7 +7,8 @@ import pandas as pd
 from pyspark.sql import functions as F
 import datetime as dt
 from pyspark.sql.types import StringType
-
+import os
+os.environ["HADOOP_HOME"]= 'C:\\Travaux_2012\\Anaconda e Python\\hadoop-2.8.1'
 
 
 

@@ -4,6 +4,9 @@ import numpy as np
 import pandas as pd
 from pyspark.sql import functions as F
 from pyspark.sql.session import SparkSession
+import os
+os.environ["HADOOP_HOME"]= 'C:\\Travaux_2012\\Anaconda e Python\\hadoop-2.8.1'
+
 #import cloudpickle as pickle
 '''
 import os

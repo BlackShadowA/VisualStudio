@@ -6,7 +6,8 @@ import pandas as pd
 from pyspark.sql import functions as F
 from pyspark.sql.functions import udf
 from pyspark.sql.types import StringType,IntegralType
-
+import os
+os.environ["HADOOP_HOME"]= 'C:\\Travaux_2012\\Anaconda e Python\\hadoop-2.8.1'
 '''
 import os
 os.environ["JAVA_HOME"]= 'C:\\Progra~1\\Java\\jre8'

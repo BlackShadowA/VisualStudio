@@ -4,6 +4,8 @@ import pyspark
 from pyspark.sql.session import SparkSession
 import pandas as pd
 from pyspark.sql import functions as F
+import os
+os.environ["HADOOP_HOME"]= 'C:\\Travaux_2012\\Anaconda e Python\\hadoop-2.8.1'
 
 spark = SparkSession\
     .builder\
