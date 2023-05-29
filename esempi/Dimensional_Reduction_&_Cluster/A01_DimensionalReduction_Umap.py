@@ -1,7 +1,7 @@
 import umap
 import pandas as pd
 
-df = pd.read_excel("C:\\Travaux_2012\\Esempi_python\\dataset\\ccdata.xls")
+df = pd.read_excel("C:\\Travaux_2012\\Esempi_python\\ccdata.xls")
 print(df)
 df = df.drop('default payment next month', axis = 1)  
 
