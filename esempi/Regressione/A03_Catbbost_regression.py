@@ -8,7 +8,7 @@ import IPython
 import ipywidgets
 import plotly
 
-df = pd.read_csv("C:\\Travaux_2012\\Esempi_python\\dataset\\train.csv")
+df = pd.read_csv("C:\\Travaux_2012\\Esempi_python\\train.csv")
 print(df)
 
 y = df["SalePrice"]
