@@ -109,3 +109,69 @@ def compute(stock, flussi):
 
 
 
+from pyspark.sql import functions as F
+from transforms.api import transform_df, Input, Output
+
+
+@transform_df(
+    Output("/Users/UR00601/Replatforming/datasets/Afi_Revenus/A002_Stock_Revenues/A0201_Volumi_revenus"),
+    total_revenues_h=Input("/uci/common_layer/enforced/data/total_revenues_h"),
+)
+def compute(total_revenues_h):
+    df = total_revenues_h\
+        .filter(F.col('snapshot_dt') == '2022-12-31')\
+        .filter(F.col('stru_hie_lev5_de').like('%RETAIL%'))\
+        .selectExpr(
+            'accprod_hier_lev01_de',
+            'accprod_hier_lev02_de',
+            'accprod_hier_lev03_de',
+            'accprod_hier_lev04_de',
+            'accprod_de',
+            'tot_rev_cytd_vl as mol_alla_data',
+            'tot_rev_fly_vl as mol_fine_anno_mese_precedente',
+            'tot_rev_lytd_vl as mol_progressivo_anno_precedente',
+            'tot_rev_m0_vl as mol_mese_corrente',
+            'tot_avg_lcap_m0_vl as volumi_perido_anno_corrente',
+            'tot_avg_lcap_cytd_vl as volumi_progressivo_anno_corrente',
+            'tot_avg_lcap_fly_vl as volumi_fine_anno_mese_precedente',
+            'tot_avg_lcap_lytd_vl  as volumi_progressivo_anno_precedente'
+
+        )\
+        .groupby('accprod_hier_lev01_de',
+                 'accprod_hier_lev02_de',
+                 'accprod_hier_lev03_de',
+                 'accprod_hier_lev04_de',
+                 'accprod_de',)\
+        .agg(F.sum('mol_alla_data').alias('mol_alla_data'),
+             F.sum('volumi_progressivo_anno_corrente').alias('volumi_progressivo_anno_corrente'),
+             F.sum('mol_progressivo_anno_precedente').alias('mol_progressivo_anno_precedente'),
+             F.sum('mol_fine_anno_mese_precedente').alias('mol_fine_anno_mese_precedente'),
+             F.sum('volumi_fine_anno_mese_precedente').alias('volumi_fine_anno_mese_precedente'),
+             F.sum('mol_mese_corrente').alias('mol_mese_corrente'),
+             F.sum('volumi_perido_anno_corrente').alias('volumi_perido_anno_corrente'),
+             F.sum('volumi_progressivo_anno_precedente').alias('volumi_progressivo_anno_precedente'),
+        )
+
+    return df
+
+
++---+----+---+----+
+|key|   X|  Y|   Z|
++---+----+---+----+
+|  G|   4|  2|null|
+|  H|null|  4|   5|
++---+----+---+----+
+
+Voglio fare unpivot sulla colonna Key è unpivottare le tre colonne X,Y,Z
+
+df = df.selectExpr("key", "stack(3, 'X', X, 'Y', Y, 'Z', Z) as (B, C)").where("C is not null")
+
+
++---+---+---+
+|  A|  B|  C|
++---+---+---+
+|  G|  X|  4|
+|  G|  Y|  2|
+|  H|  Y|  4|
+|  H|  Z|  5|
++---+---+---+
