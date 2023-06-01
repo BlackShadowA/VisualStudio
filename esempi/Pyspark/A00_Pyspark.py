@@ -16,10 +16,7 @@ spark = SparkSession\
 
 print(f"Versione Pyspark = {spark.version}")
 
-my_dict = {
-    'key':[10,20,30],
-    'valori':[50,None,10]
-}
+my_dict = dict(key=[10, 20, 30], valori=[50, None, 10])
 
 ll = spark.createDataFrame(pd.DataFrame(my_dict))
 ll.show()
