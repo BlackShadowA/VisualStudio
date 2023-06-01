@@ -155,23 +155,3 @@ def compute(total_revenues_h):
     return df
 
 
-+---+----+---+----+
-|key|   X|  Y|   Z|
-+---+----+---+----+
-|  G|   4|  2|null|
-|  H|null|  4|   5|
-+---+----+---+----+
-
-Voglio fare unpivot sulla colonna Key è unpivottare le tre colonne X,Y,Z
-
-df = df.selectExpr("key", "stack(3, 'X', X, 'Y', Y, 'Z', Z) as (B, C)").where("C is not null")
-
-
-+---+---+---+
-|  A|  B|  C|
-+---+---+---+
-|  G|  X|  4|
-|  G|  Y|  2|
-|  H|  Y|  4|
-|  H|  Z|  5|
-+---+---+---+
