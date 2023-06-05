@@ -26,7 +26,7 @@ df = spark.createDataFrame(data, columns)
 df.show()
 
 from pyspark.sql.functions import array, explode, struct
-from functools import reduce
+# from functools import reduce
 
 
 
