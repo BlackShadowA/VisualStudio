@@ -154,4 +154,3 @@ def compute(total_revenues_h):
 
     return df
 
-
