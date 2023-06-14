@@ -13,6 +13,17 @@ cluster1 = (
     .agg(*carte, *conto)
 )
 
+'''
+Secondo metodo
+'''
+
+column = list(set(input_revenues.schema.names) - set(list_rename))
+exprs = [sum_(x).alias(x) for x in column]
+
+
+agg(*exprs)
+
+
 
 '''
 Altro metodo:
