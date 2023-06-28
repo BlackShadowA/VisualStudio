@@ -44,6 +44,8 @@ def stack_columns(df, key_col):
 stacked_df = stack_columns(df, "name")
 stacked_df.show()
 
+  
+
 spark.stop()
 
 
