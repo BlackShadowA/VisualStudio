@@ -22,7 +22,7 @@ my_dict = {
 ll = spark.createDataFrame(pd.DataFrame(my_dict))
 
 
-funs = [sum, F.count]
+funs = [F.sum, F.count]
 cols = ["operazioni", "ammontari"]
 aggregazione = ll.groupby('ndg')\
     .agg(*[f(c).alias(f'{c}_{f.__name__}') for c in cols for f in funs])
@@ -30,4 +30,16 @@ aggregazione = ll.groupby('ndg')\
 aggregazione.show()
 
 # Metodo simile
+cols = ["operazioni", "ammontari"]
+somma = [F.sum(c).alias('sum_' + c) for c in cols]
+conto = [F.count(c).alias('count' + c) for c in cols]
 
+operazioni = (
+    ll
+    .groupBy("ndg")
+    .agg(*somma, *conto)
+)
+
+operazioni.show()
+
+spark.stop()
