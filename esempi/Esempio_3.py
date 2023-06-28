@@ -154,3 +154,37 @@ def compute(total_revenues_h):
 
     return df
 
+
+
+df=Input("/uci/cido_consumer/Volumes & Sales/Data/cbk_volume_sales_balance_tot_asset_loans_globe"),
+mutui=Input("/uci/Consumer Finance/analisi_spot/Analisi_Gaetano/Stock_&_Flussi/Stock Mutui/datasets/StockMutui_202212")
+)
+def compute(df, mutui):
+    anno_mese = '2022-12-31'
+    last = df.filter(F.col("snapshot_date") <= anno_mese).agg(F.max("snapshot_date")).collect()[0][0]  # noqa
+    stock_impieghi = (
+        df
+        .filter(F.col("snapshot_date") == last)
+        .filter("mkt_prod_hier_lev02_cd in  ('30','31','36','37','38')")
+        .filter(F.col("workday00_bal_vl") > 0)\
+        .groupBy("cntp_id", "macro_area", "mis_deal_nr", "mkt_prod_cd")\
+        .agg(
+            F.sum("workday00_bal_vl").alias("Impieghi")
+ 
+        )
+    )
+    mutui = mutui.selectExpr("cntp_id", "rapporto as mis_deal_nr", "co_var_cpc", "im_capres", "im_uti_fi",
+                             "dt_contr_fi", "fl_tp_tasso_fi", "flag_prima_casa", "canale_di_vendita")
+
+    stock_impieghi = stock_impieghi.join(mutui, on=["cntp_id", "mis_deal_nr"])
+
+    return stock_impieghi
+
+
+
+
+    def col_replace(df):
+        replacements = {c:c.replace('_sum_sum','_sum') for c in df.columns if '_sum' in c}
+        df = df.select([col(c).alias(replacements.get(c, c)) for c in df.columns])
+        return df
+    inets = col_replace(inets_)#4.175.682 vs sas 4.175.676
