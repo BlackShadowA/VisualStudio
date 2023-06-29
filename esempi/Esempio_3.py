@@ -183,8 +183,3 @@ def compute(df, mutui):
 
 
 
-    def col_replace(df):
-        replacements = {c:c.replace('_sum_sum','_sum') for c in df.columns if '_sum' in c}
-        df = df.select([col(c).alias(replacements.get(c, c)) for c in df.columns])
-        return df
-    inets = col_replace(inets_)#4.175.682 vs sas 4.175.676
