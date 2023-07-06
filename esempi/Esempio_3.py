@@ -181,9 +181,8 @@ def compute(df, mutui):
     return stock_impieghi
 
 
+class MyClass(object):
+…
+class MyList(list):
+…
 
-# Avendo commentato Studente.__str__()
->>> print(studente_uno)
-
-# output
-'Studente('Peter', 'Malkovich', 'Psicologia')'
