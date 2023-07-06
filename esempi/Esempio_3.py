@@ -182,4 +182,8 @@ def compute(df, mutui):
 
 
 
-rrtttss
+# Avendo commentato Studente.__str__()
+>>> print(studente_uno)
+
+# output
+'Studente('Peter', 'Malkovich', 'Psicologia')'
