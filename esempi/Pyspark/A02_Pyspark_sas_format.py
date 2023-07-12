@@ -49,6 +49,7 @@ df = ll.withColumn("MOL_ONE", vol_o_w_one.getItem(F.col("amount")))
 df.show()
 
 # Secondo metodo con Replacle
+# se la tebella ha tipo diverso dell'input 
 
 df = ll.replace(to_replace=vol_o_w_one, subset='amount')
 df.show()
