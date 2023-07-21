@@ -17,7 +17,7 @@ MOB_ALGO.setBinningConstraints( max_bins = 6, min_bins = 3,
 SizeBinning = MOB_ALGO.runMOB(mergeMethod='Size')
 print(SizeBinning)
 StatsBinning = MOB_ALGO.runMOB(mergeMethod='Stats')
-print(SizeBinning)
+print(StatsBinning)
 
 # plot the bin summary data.
 print('Bins Size Base')
