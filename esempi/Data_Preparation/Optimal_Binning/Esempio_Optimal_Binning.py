@@ -1,11 +1,14 @@
 import pandas as pd
 import py_mob as ll
 
-df = pd.read_excel("C:\\Travaux_2012\\Esempi_python\\ccdata.xls")
-print(df)
 
-y = df['default payment next month']
-utl = df['BILL_AMT5']
+df = pd.read_csv('C:\\Users\\ur00601\\Downloads\\Monotonic-Optimal-Binning-main\\data\\german_data_credit_cat.csv')
+df['default'] = df['default'] - 1
+print(df)
+df = df[['default','Durationinmonth']]
+
+y = df['default']
+utl = df['Durationinmonth']
 
 utl_bin = ll.qtl_bin(utl, y)
 ll.view_bin(utl_bin)
