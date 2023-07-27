@@ -2,5 +2,15 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/esempi/Modelli Industrializzati/Insurance/insurance_propensity_deployment" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/esempi/Modelli Industrializzati/Insurance/insurance_propensity_experiments" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/esempi/Modelli Industrializzati/Insurance/insurance_propensity_model_evaluator" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/esempi/Modelli Industrializzati/cards_propensity_experiments" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/esempi/Modelli Industrializzati/churn/churn_deployment" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/esempi/Modelli Industrializzati/churn/churn_experiments" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/esempi/Modelli Industrializzati/churn/model_evaluator" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/esempi/Modelli Industrializzati/unicredit-mlops-experiments" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/esempi/Modelli Industrializzati/unicredit-mlops-models" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/esempi/Modelli Industrializzati/unicredit-mlops-monitoring" vcs="Git" />
   </component>
 </project>
