@@ -5,7 +5,7 @@ from pyspark.sql.session import SparkSession
 import pandas as pd
 from pyspark.sql import functions as F
 import os
-from woe_pyspark import var_type, execute_woe
+from woe_pyspark import var_type,WOE
 os.environ["HADOOP_HOME"]= 'C:\\Travaux_2012\\Anaconda e Python\\hadoop-2.8.1'
 
 
@@ -26,9 +26,8 @@ char_vars, num_vars = var_type(df)
 print(char_vars)
 print(num_vars)
 
-target_variable_name = 'default'
-final_vars  = char_vars + num_vars
-output, iv = execute_woe(df, target_variable_name, final_vars)
-
-print(output)
-print(iv)
+target = 'default'
+max_bin = 5
+ll ,pp = WOE(df, num_vars, target, max_bin)
+ll.show()
+pp.show()
