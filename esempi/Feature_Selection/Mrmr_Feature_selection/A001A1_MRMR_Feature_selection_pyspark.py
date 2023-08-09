@@ -30,10 +30,15 @@ print(selected_features)
 #  Regressione
 file = "C:\\Travaux_2012\\Esempi_python\\train.csv"
 df2 = spark.read.csv(file, header=True,inferSchema=True, sep=',')
-df2.show()
 
 selected_features_regression = mrmr_regression(df = df2, target_column="SalePrice", K=3)
 print(selected_features_regression)
 
 
 
+# modello compact
+filename_compact = 'C:\\Users\\ur00601\\Downloads\\Feature importance mrmr.csv'
+df3 = spark.read.csv(filename_compact , header=True,inferSchema=True, sep=',')
+
+selected_features = mrmr_classif(df = df3, target_column="label", K=3)
+print(selected_features)
