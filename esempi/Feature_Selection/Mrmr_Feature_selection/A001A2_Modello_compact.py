@@ -18,17 +18,18 @@ spark = SparkSession\
     .appName("PySpark XGBOOST Native")\
     .getOrCreate()
     
-    
 # modello compact
-filename_compact = 'C:\\Users\\ur00601\\Downloads\\Feature importance mrmr.csv'
+# filename_compact = 'C:\\Users\\ur00601\\Downloads\\Feature importance mrmr.csv'
+filename_compact = 'C:\\Users\\ur00601\\Downloads\\trian_test.csv'
 df3 = spark.read.csv(filename_compact , header=True,inferSchema=True, sep=',')\
-           .drop('n_pp')
+           .drop('n_pp', 'customer_key', 'dt_riferimento')
 
 from woe_pyspark import var_type,WOE
-selected_features = mrmr_classif(df = df3, target_column="label", K=3)
+selected_features = mrmr_classif(df = df3, target_column="label", K=10)
 print(selected_features)
 
 # Woe e IV delle variabili selezionate
+'''
 target = 'label'
 max_bin = 5
 ll ,pp = WOE(df3, selected_features, target, max_bin)
@@ -36,3 +37,4 @@ ll = ll.sort('varname', 'start')
 ll.show()
 pp.show()
 plotBinsSummary(ll.toPandas(), var_name = 'importo_erogato_last_pp')
+'''
