@@ -7,6 +7,7 @@ from pyspark.sql import functions as F
 import os
 from Mrmr_pyspask import mrmr_classif, mrmr_regression
 from woe_pyspark import var_type,WOE
+from plot_woe import plotBinsSummary
 os.environ["HADOOP_HOME"]= 'C:\\Travaux_2012\\Anaconda e Python\\hadoop-2.8.1'
 
 
@@ -27,7 +28,12 @@ df = spark.read.csv(filename, header=True,inferSchema=True, sep=';')\
 # classificazione    
 selected_features = mrmr_classif(df = df, target_column="default", K=3)
 print(selected_features)
-
+target = 'default'
+max_bin = 5
+ll ,pp = WOE(df, selected_features, target, max_bin)
+ll.show()
+plotBinsSummary(ll.toPandas(), var_name = 'Durationinmonth')
+'''
 #  Regressione
 file = "C:\\Travaux_2012\\Esempi_python\\train.csv"
 df2 = spark.read.csv(file, header=True,inferSchema=True, sep=',')
@@ -52,3 +58,4 @@ ll ,pp = WOE(df3, selected_features, target, max_bin)
 ll = ll.sort('varname', 'start')
 ll.show()
 pp.show()
+'''
