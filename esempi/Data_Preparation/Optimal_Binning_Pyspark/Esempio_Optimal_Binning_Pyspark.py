@@ -37,5 +37,15 @@ ll.show()
 pp.show()
 
 pandas_df = ll.toPandas()
+# prendo le colonne con IV più alto di un valore e vedo se sono correlate tra loro
+ivv = pp.toPandas()
+ss = ivv.loc[ivv['IV'] > 0.010].index.values
+train_cols = [col for col in df.columns if col in ss]
+print(ss)
+da finire https://www.kaggle.com/code/gopidurgaprasad/amex-credit-score-model
+'''
+
+
 print('Bins Size Base')
 plotBinsSummary(pandas_df, var_name = 'Durationinmonth')
+'''
