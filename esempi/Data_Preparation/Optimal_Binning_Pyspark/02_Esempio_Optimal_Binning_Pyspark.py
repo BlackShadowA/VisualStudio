@@ -8,7 +8,9 @@ import os
 from woe_pyspark import var_type,WOE
 from plot_woe import plotBinsSummary
 os.environ["HADOOP_HOME"]= 'C:\\Travaux_2012\\Anaconda e Python\\hadoop-2.8.1'
-
+import matplotlib.pylab as plt
+import seaborn as sns
+import numpy as np
 
 
 #Spark Ui http://localhost:4040
@@ -36,16 +38,5 @@ ll = ll.sort('varname', 'start')
 ll.show()
 pp.show()
 
-pandas_df = ll.toPandas()
-# prendo le colonne con IV più alto di un valore e vedo se sono correlate tra loro
-ivv = pp.toPandas()
-ss = ivv.loc[ivv['IV'] > 0.010].index.values
-train_cols = [col for col in df.columns if col in ss]
-print(ss)
-da finire https://www.kaggle.com/code/gopidurgaprasad/amex-credit-score-model
-'''
 
-
-print('Bins Size Base')
-plotBinsSummary(pandas_df, var_name = 'Durationinmonth')
-'''
+spark.stop()
