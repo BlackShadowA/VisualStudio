@@ -209,6 +209,4 @@ def get_feature_contributions(y_true, y_pred, shap_values, shap_expected_value):
   
   return prediction_contribution, error_contribution
   
-    
-  
-    
+
