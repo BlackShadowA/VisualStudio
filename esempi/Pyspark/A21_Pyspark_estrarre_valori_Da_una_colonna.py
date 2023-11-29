@@ -35,3 +35,8 @@ def extract_column_values_to_list(df, column_name):
 
 features = extract_column_values_to_list(ll, 'nomi')
 print(features)
+
+# secondo metodo
+
+colonne = [row['nomi'] for row in ll.select(F.col("nomi")).collect()]
+print(colonne)
