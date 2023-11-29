@@ -18,7 +18,7 @@ print(f"Versione Pyspark = {spark.version}")
 
 my_dict = {
     'key':[10,20,30],
-    'nome_1':['GAETANO MAURO','ROBERTA','ROBERTA BALBO'],
+    'nome_1':['GAETANO MAURO','ROBERTA, GRAMONDO','ROBERTA BALBO'],
     'nome_2':['GAETANO MAURO','GRAMONDO','BALBO ROBERTA']
 }
 
