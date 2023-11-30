@@ -27,8 +27,6 @@ my_dict = {
 ll = spark.createDataFrame(pd.DataFrame(my_dict))
 ll.show()
 
-
-
 # indice di similarità di levenshtein
 
 def similarity(df, col_name_1, col_name_2):
