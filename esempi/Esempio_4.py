@@ -210,3 +210,14 @@ def get_feature_contributions(y_true, y_pred, shap_values, shap_expected_value):
   return prediction_contribution, error_contribution
   
 
+
+
+split_col = F.split(bi_counts['bigram'], ' ')
+bi_counts = bi_counts\
+    .withColumn('worda', split_col.getItem(0))\
+    .withColumn('wordb', split_col.getItem(1))\
+    .join(one_counts, F.col('worda') == F.col('onegram'), 'left').drop('onegram')\
+    .withColumnRenamed('onegram_count', 'worda_count')\
+    .join(one_counts, F.col('wordb') == F.col('onegram'), 'left').drop('onegram')\
+    .withColumnRenamed('onegram_count', 'wordb_count')
+)

@@ -19,13 +19,14 @@ print(f"Versione Pyspark = {spark.version}")
 
 
 my_dict = {
-    'key':[10,20,30],
-    'nome_1':['GAETANO MAURO','ROBERTA','ROBERTA BALBO'],
-    'nome_2':['GAETANO MAURO','GRAMONDO','BALBO ROBERTA']
+    'key':[10,20,30, 40],
+    'nome_1':['GAETANO MAURO','ROBERTA','ROBERTA BALBO', 'MARCHI GIOVANNI'],
+    'nome_2':['GAETANO MAURO','GRAMONDO','BALBO ROBERTA', 'MARCHI GIOVANNI DIRECT']
 }
 
 ll = spark.createDataFrame(pd.DataFrame(my_dict))
 ll.show()
+
 
 # indice di similarità di levenshtein
 
@@ -38,7 +39,7 @@ def similarity(df, col_name_1, col_name_2):
         r = y[::-1]
         z = ' '.join(r)
         return z
-    # Potrebbe il nome ed il cognome essere invertiti
+    # Potrebbe il nome ed il cognome essere invertiti in una delle due colonne 
     inverto = udf(lambda x : f(x), StringType())
     # Inverto Nome e Cognome
     df = df.withColumn('inverto_ordine', inverto(df[col_name_2]))
@@ -82,10 +83,11 @@ def similarity_list(col_name_1, col_name_2):
     lista_nomi_singoli1 = suddividi_nomi(col_name_1)
     lista_nomi_singoli2 = suddividi_nomi(col_name_2)
     result = all(elem in lista_nomi_singoli1 for elem in lista_nomi_singoli2)
-    
+    # fai anche inverso altrimenti il caso 4 non funziona
+    result2 = all(elem in lista_nomi_singoli2 for elem in lista_nomi_singoli1)
     app = 0.0
     
-    if result == True:
+    if result == True or result2 == True :
         app = 1.0
 
     return  app
