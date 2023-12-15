@@ -221,3 +221,6 @@ bi_counts = bi_counts\
     .join(one_counts, F.col('wordb') == F.col('onegram'), 'left').drop('onegram')\
     .withColumnRenamed('onegram_count', 'wordb_count')
 )
+
+
+payments_name_pt2 = payments_name_pt2.withColumn(oset_column_name, F.concat_ws(' ', F.col(oset_column_name)))

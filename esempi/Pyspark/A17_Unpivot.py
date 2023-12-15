@@ -7,6 +7,8 @@ from pyspark.sql import functions as F
 import os
 os.environ["HADOOP_HOME"]= 'C:\\Travaux_2012\\Anaconda e Python\\hadoop-2.8.1'
 from pyspark.sql.functions import col
+import itertools
+
 
 #Spark Ui http://localhost:4040
 spark = SparkSession\
@@ -43,6 +45,23 @@ def stack_columns(df, key_col):
 
 stacked_df = stack_columns(df, "name")
 stacked_df.show()
+
+# altro metodo
+print("altro metodo")
+selected_col = [c for c in df.columns if c not in ['name']]
+
+df_ = (
+    df
+    .withColumn("col_to_expl",
+                F.create_map(list(itertools.chain(*[(F.lit(c), F.col(c))
+                                for c in selected_col]))))
+)
+
+df_.show()
+
+df_ = df_.select('name', F.explode('col_to_expl').alias("nomi_colonna", "valori_colonna"))
+df_.show()
+
 
   
 
