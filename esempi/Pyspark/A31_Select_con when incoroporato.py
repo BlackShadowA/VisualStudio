@@ -11,3 +11,29 @@
             .when(F.col("eta") > 90, 'Over 90 - Seniors')
             .otherwise('n.d.').alias("fascia_eta"),
         *srtabstru.columns, 'ndg', 'fl_fgc', 'dt_rif')
+
+
+        .select(
+            "reference_date_m",
+            *keys[1:],
+            *keys_pricing[1:],
+            *list(
+                sum(
+                    (
+                        (col, col + "_detailed")
+                        for col in [
+                            f"count_{suffix}",
+                            f"average_saldo_end_of_month_{suffix}",
+                            f"sum_{suffix}",
+                            f"sum_speculative_component_{suffix}",
+                            f"outflow_bond_next_3_months_{suffix}",
+                            f"outflow_predicted_{suffix}",
+                        ]
+                    ),
+                    (),
+                )
+            ),
+            f"median_ratio_outflow_next_3_months_over_speculative_{suffix}",
+        )
+        .distinct()
+    )

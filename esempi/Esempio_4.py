@@ -210,17 +210,22 @@ def get_feature_contributions(y_true, y_pred, shap_values, shap_expected_value):
   return prediction_contribution, error_contribution
   
 
-
-
-split_col = F.split(bi_counts['bigram'], ' ')
-bi_counts = bi_counts\
-    .withColumn('worda', split_col.getItem(0))\
-    .withColumn('wordb', split_col.getItem(1))\
-    .join(one_counts, F.col('worda') == F.col('onegram'), 'left').drop('onegram')\
-    .withColumnRenamed('onegram_count', 'worda_count')\
-    .join(one_counts, F.col('wordb') == F.col('onegram'), 'left').drop('onegram')\
-    .withColumnRenamed('onegram_count', 'wordb_count')
+dashboard = Dashboard(
+    instances=test_instances,
+    local_explanations=local_explanations,
+    global_explanations=global_explanations,
+    prediction_explanations=prediction_explanations,
+    class_names=class_names
 )
+dashboard.show()
+#Dash is running on http://127.0.0.1:8050/
 
 
-payments_name_pt2 = payments_name_pt2.withColumn(oset_column_name, F.concat_ws(' ', F.col(oset_column_name)))
+
+# Creating a list of true values
+y_true = [23.5, 45.1, 34.7, 29.8, 48.3, 56.4, 21.2, 33.5, 39.8, 41.6,
+          27.4, 36.7, 45.9, 50.3, 31.6, 28.9, 42.7, 37.8, 34.1, 29.5]
+
+# Creating a list of predicted values
+y_pred = [25.7, 43.0, 35.5, 30.1, 49.8, 54.2, 22.5, 34.2, 38.9, 42.4,
+          26.3, 37.6, 46.7, 51.1, 33.5, 27.7, 43.2, 36.9, 33.4, 31.0]
