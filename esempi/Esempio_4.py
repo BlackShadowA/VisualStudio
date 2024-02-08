@@ -222,10 +222,185 @@ dashboard.show()
 
 
 
-# Creating a list of true values
-y_true = [23.5, 45.1, 34.7, 29.8, 48.3, 56.4, 21.2, 33.5, 39.8, 41.6,
-          27.4, 36.7, 45.9, 50.3, 31.6, 28.9, 42.7, 37.8, 34.1, 29.5]
+def custom_medae(y_true, y_pred):
+    
+    # Creating an empty list of absolute errors
+    absolute_errors = []
+    
+    # Iterating through actual and predicted values for y
+    for true, predicted in zip(y_true, y_pred):
+        
+        # Computing the differences(i.e., errors)
+        error = true - predicted
+        # Obtaining the absolute value
+        if error < 0:  # If the difference is a negative number,
+            error = -error # We obtain the negative of the negative, which is a positive number
+        
+        absolute_errors.append(error) # Adding absolute value to the list of absolute errors
+    
+    # Ordering absolute_errors list in ascending order
+    sorted_absolute_errors = sorted(absolute_errors)
+    # Obtaining the total number of elements in the sorted_absolute_errors list
+    n = len(sorted_absolute_errors)
+    
+    # Obtaining the middle index of the list by dividing the total length of the list by half
+    middle = n // 2 # Floor division to return an integer
+    
+    # We must check if we have an even or odd number of elements
+    if n % 2 ==0: # If we have an even number of elements,
+        # The median will be equal to the mean of the two elements in the middle of the list
+        medae = (sorted_absolute_errors[middle - 1] + sorted_absolute_errors[middle]) / 2
+    else:
+        # For an odd number of elements, the median will be equal to the value in the middle of the list
+        medae = sorted_absolute_errors[middle]    
+    return medae
 
-# Creating a list of predicted values
-y_pred = [25.7, 43.0, 35.5, 30.1, 49.8, 54.2, 22.5, 34.2, 38.9, 42.4,
-          26.3, 37.6, 46.7, 51.1, 33.5, 27.7, 43.2, 36.9, 33.4, 31.0]
+
+#!/usr/bin/python
+#title          :abalone.py
+#description    :A testing script for Guozhu Dong's CPXR algorithm on abalone data
+#author         :Henry Lin
+#version        :0.0.1
+#python_version :2.7.6
+#================================================================================
+
+#Determing Optimal Threshold
+
+
+def get_per_class_metrics(ytest, ypred):
+    precision_arr = precision_score(ytest, ypred, average=None)
+    recall_arr = recall_score(ytest, ypred, average=None)
+    f1_arr = f1_score(ytest, ypred, average=None)
+
+    return precision_arr, recall_arr, f1_arr
+
+def get_overall_metrics(ytest, ypred, average="weighted"):
+    acc = accuracy_score(ytest, ypred)
+
+    precision = precision_score(ytest, ypred, average=average)
+    recall = recall_score(ytest, ypred, average=average)
+    f1 = f1_score(ytest, ypred, average=average)
+
+    return acc, precision, recall, f1
+
+def print_scores(acc, precision, recall, f1):
+    print("Accuracy: ", acc)
+    print("precision score:", precision)
+    print("recall score:", recall)
+    print("F1 score:", f1)
+     
+
+    df=Input("/Users/UR00601/Replatforming/datasets/Z01_Projects/A03_Finalta/Ricavi/A001A01_Base_Mol"),
+)
+def compute(df):
+
+    # Ricavi da Impieghi : Rateizzazione e Revolving (non riesci a distringuere uno o l'altro)
+    impieghi = df.filter(F.col('co_prodotto').isin('7125', '7126', '7603', '7604', '7606', '7607'))\
+                 .withColumn('Carte_Di_Credito', F.lit('Rateizzazioni_&_Revolving'))\
+                 .withColumn('Mol_da_utilizzare', F.col('mol'))
+
+    # Ricavi da Servizio
+    Interchange_fees = ['400016', '400017', '400018', '400019', '700856',
+                        '700867', '700891', '760216', '760224', '760228',
+                        '760235', '760236', '760238', '760244',  '898748',
+                        '898808', '898815', '898823']
+
+    Cash_advance_ATM_fee = ['700794', '700786', '898743', '898805', '898820']
+
+    Membership_fees = ['700760', '700763', '700806', '700807', '700860', '700862', '760212', '760221',
+                       '760232', '760240', '898740', '898813', '898828', '898835']
+
+    Currency_Exchange_Fee = ['700874', '700789', '700872', '700793', '700873',
+                             '898811', '898818', '898826', '898830', '898832']
+
+    df = df.withColumn('Carte_Di_Credito', F.when(F.col('tp_oper').isin(Interchange_fees), F.lit('Interchange_fees'))\
+                                            .when(F.col('tp_oper').isin(Cash_advance_ATM_fee), F.lit('Cash_advance_ATM_fee'))\
+                                            .when(F.col('tp_oper').isin(Membership_fees), F.lit('Membership_fees'))\
+                                            .when(F.col('tp_oper').isin(Currency_Exchange_Fee), F.lit('Currency_Exchange_Fee'))
+                      )\
+           .withColumn('Mol_da_utilizzare', F.when(F.col('tp_oper').isin(Interchange_fees), F.col('cm_rp_att'))\
+                                             .when(F.col('tp_oper').isin(Cash_advance_ATM_fee), F.col('cm_rp_att'))\
+                                             .when(F.col('tp_oper').isin(Membership_fees), F.col('cm_rp_att'))\
+                                             .when(F.col('tp_oper').isin(Currency_Exchange_Fee), F.col('cm_rp_att'))
+                      )
+
+    df = df.unionByName(impieghi)
+
+    return df
+
+
+
+    # calcolare i ventili
+    w = Window.orderBy(df.score)
+    df = df.select('*', ceil(5 * percent_rank().over(w)).alias("ventile"))
+    
+    
+
+    canone = B01B07_Canone.withColumn('card_contr_id', F.lpad(F.col('KCCEM_10010_E_CRE_RAPPORTO'), 14, '0'))\
+                          .select('card_contr_id',
+                                  'KCCEM_10090_E_CRE_IM_IMPMOV',
+                                  'KCCEM_10140_E_CRE_RIF_MOV', 
+                                  'KCCEM_10150_E_CRE_DES_MOV',
+                                  'KCCEM_10120_E_CRE_DT_REG')
+
+    df = B01B01_Stock_Primario.join(canone, on='card_contr_id')
+    return df
+
+
+
+
+from transforms.api import configure
+from pyspark.sql import functions as F
+from transforms.api import transform_df, Input, Output
+from myproject.datasets.utils import anno, fine_anno
+
+@configure(profile=['CLOUD_NUM_EXECUTORS_4'])
+@transform_df(
+    Output(f"/uci/customer_engagement_exploration/projects/benchmark-abi-migranti/datasets/Output/{anno}/D4/D4_6_pac_priv_sb_{anno}"),
+    pac_assic1=Input(f"/uci/customer_engagement_exploration/projects/benchmark-abi-migranti/datasets/Output/{anno}/Tabelle_base/bin0bda0_planpog"),
+    pac_assic2=Input(f"/uci/customer_engagement_exploration/projects/benchmark-abi-migranti/datasets/Output/{anno}/Tabelle_base/bin0bda0_pltbpro"),
+    pac=Input(f"/uci/customer_engagement_exploration/projects/benchmark-abi-migranti/datasets/Output/{anno}/Tabelle_base/tigebda0_tipowfo9"),
+    base=Input(f"/uci/customer_engagement_exploration/projects/benchmark-abi-migranti/datasets/Output/{anno}/Popolazione_base/base_5_all")
+)
+def compute(pac, pac_assic1, pac_assic2, base):
+
+    df_tige = (
+        pac
+        .filter(F.col('FL_TP_PIANO_FO') == 'P')
+        .filter(F.col('QT_QUOT_SALDO') > 0 )
+        .selectExpr('NDG as cntp_id', 'CO_ISIN')
+        .withColumn('fl_pac', F.lit(1))     
+        .dropDuplicates()   
+        .select('cntp_id','fl_pac')
+        )
+
+    #pac assicurazione
+    df_bin = (
+        pac_assic1
+        .join(pac_assic2, on=[pac_assic1.O1_TIPO_ASSICURAZIONE == pac_assic2.MAC1_COD_PROD], how='inner')
+        .filter(~F.col('MAC1_COD_RAMO').isin('RD', 'MA'))
+        .filter(F.col('O1_STATO_PRO_POL').isin('A','E','M','P','U','W'))
+        .filter(F.col('O1_TIPO_RATEAZ') != 'U')
+        .selectExpr('O1_NDG as cntp_id', 'O1_NUMRAPP')
+        .withColumn('fl_pac', F.lit(1))
+        .dropDuplicates()
+        .select('cntp_id','fl_pac')
+        )
+    
+    df_ = (
+        df_tige.unionByName(df_bin)
+    )
+
+    df = (
+        df_
+        .groupby('cntp_id').agg(F.sum('fl_pac').alias('n_pac'))
+    )
+   
+    pac_def = (
+        base
+        .join(df.select("cntp_id","n_pac"), base.key==df.cntp_id, how = 'inner')
+             
+    ) 
+    
+    return pac_def.filter(F.col('nazione2').isNotNull()).dropDuplicates()
+

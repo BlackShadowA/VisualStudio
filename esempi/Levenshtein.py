@@ -96,3 +96,8 @@ levenshtein_udf = udf(similarity_list, DoubleType())
 result_df = ll.withColumn("levenshtein_distance_nuova", levenshtein_udf(ll["nome_1"], ll["nome_2"]))
 result_df.show()
 
+
+y_pred = model.predict(X_test, num_iteration=model.best_iteration)
+
+
+y_pred_max = np.argmax(y_pred, axis=1)

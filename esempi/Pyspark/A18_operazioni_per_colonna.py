@@ -34,7 +34,14 @@ my_dict = {
 ll = spark.createDataFrame(pd.DataFrame(my_dict))
 ll.show()
 
+# Se voglio il max
+
 aa = [col for col in ll.columns if col !='ProductType']
 print(aa)
 newdf = ll.withColumn('total_somma_colonne', sum(ll[col] for col in aa))
+newdf.show()
+
+# Se voglio il max
+
+newdf = ll.withColumn('max_colonne', F.greatest(*aa))
 newdf.show()
