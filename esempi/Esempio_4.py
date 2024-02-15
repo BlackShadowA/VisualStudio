@@ -348,59 +348,49 @@ def compute(df):
 
 
 
-
-from transforms.api import configure
-from pyspark.sql import functions as F
-from transforms.api import transform_df, Input, Output
-from myproject.datasets.utils import anno, fine_anno
-
-@configure(profile=['CLOUD_NUM_EXECUTORS_4'])
-@transform_df(
-    Output(f"/uci/customer_engagement_exploration/projects/benchmark-abi-migranti/datasets/Output/{anno}/D4/D4_6_pac_priv_sb_{anno}"),
-    pac_assic1=Input(f"/uci/customer_engagement_exploration/projects/benchmark-abi-migranti/datasets/Output/{anno}/Tabelle_base/bin0bda0_planpog"),
-    pac_assic2=Input(f"/uci/customer_engagement_exploration/projects/benchmark-abi-migranti/datasets/Output/{anno}/Tabelle_base/bin0bda0_pltbpro"),
-    pac=Input(f"/uci/customer_engagement_exploration/projects/benchmark-abi-migranti/datasets/Output/{anno}/Tabelle_base/tigebda0_tipowfo9"),
-    base=Input(f"/uci/customer_engagement_exploration/projects/benchmark-abi-migranti/datasets/Output/{anno}/Popolazione_base/base_5_all")
+    flussi=Input("/uci/cido_consumer/Volumes & Sales/Data/cbk_volume_sales_movements_tot_asset_globe")
 )
-def compute(pac, pac_assic1, pac_assic2, base):
+def compute(flussi):
 
-    df_tige = (
-        pac
-        .filter(F.col('FL_TP_PIANO_FO') == 'P')
-        .filter(F.col('QT_QUOT_SALDO') > 0 )
-        .selectExpr('NDG as cntp_id', 'CO_ISIN')
-        .withColumn('fl_pac', F.lit(1))     
-        .dropDuplicates()   
-        .select('cntp_id','fl_pac')
-        )
-
-    #pac assicurazione
-    df_bin = (
-        pac_assic1
-        .join(pac_assic2, on=[pac_assic1.O1_TIPO_ASSICURAZIONE == pac_assic2.MAC1_COD_PROD], how='inner')
-        .filter(~F.col('MAC1_COD_RAMO').isin('RD', 'MA'))
-        .filter(F.col('O1_STATO_PRO_POL').isin('A','E','M','P','U','W'))
-        .filter(F.col('O1_TIPO_RATEAZ') != 'U')
-        .selectExpr('O1_NDG as cntp_id', 'O1_NUMRAPP')
-        .withColumn('fl_pac', F.lit(1))
-        .dropDuplicates()
-        .select('cntp_id','fl_pac')
-        )
-    
-    df_ = (
-        df_tige.unionByName(df_bin)
-    )
+    dt_rif = flussi.filter(F.col('snapshot_date') <= '2023-12-29').agg(F.max(F.col('snapshot_date'))).collect()[0][0]  # noqa
 
     df = (
-        df_
-        .groupby('cntp_id').agg(F.sum('fl_pac').alias('n_pac'))
-    )
-   
-    pac_def = (
-        base
-        .join(df.select("cntp_id","n_pac"), base.key==df.cntp_id, how = 'inner')
-             
-    ) 
-    
-    return pac_def.filter(F.col('nazione2').isNotNull()).dropDuplicates()
+        flussi
+        .filter(F.col("snapshot_date") == dt_rif)
+        .filter("mkt_prod_hier_lev02_cd in  ('10')")
+        .filter(F.col("macro_area").isin(['RETAIL', 'BUDDY',  'PRIVATE']))
+#        .filter(F.col("shadow_in") == 'N')
 
+    )
+
+    entrate = ['MOVA', 'MOVB', 'MOVS', 'MOVW', 'MOVG']
+    uscite = ['MOVD', 'MOVC', 'MOVV', 'MOVX', 'MOVH']
+
+    df = df.filter("mkt_prod_hier_lev02_cd in  ('10')")\
+           .withColumn('tipo_movimento', F.when(F.col('mis_data_tp').isin(entrate), F.lit("entrate"))\
+                                          .when(F.col('mis_data_tp').isin(uscite), F.lit("uscite"))
+                                          .otherwise(F.lit('Non_Classificato')))
+ 
+    df = (
+        df
+        .withColumn('stock_raccolta_diretta', F.expr("case when mkt_prod_hier_lev02_cd ='10' then curr_year_prog_mov_vl else 0 end"))
+        .withColumn('stock_raccolta_diretta_vista', F.expr("case when mkt_prod_hier_lev03_cd='100'\
+            then curr_year_prog_mov_vl else 0 end"))
+        .withColumn('stock_raccolta_diretta_a_tempo', F.expr("case when mkt_prod_hier_lev03_cd ='102' then\
+            curr_year_prog_mov_vl else 0 end"))
+        .withColumn('stock_raccolta_diretta_obbigazioni_proprie', F.expr("case when mkt_prod_hier_lev03_cd='104'\
+            then curr_year_prog_mov_vl else 0 end"))
+    )
+    return df
+
+
+
+df=Input("/uci/cido_consumer/Commercial_Sales/data/Commercial_Sales_Mch_2023"),
+)
+def compute(df):
+    df = df.filter((F.col('prod_lev_02') == 'BANCASSURANCE') |
+                   (F.col('prod_lev_01') == 'PROTEZIONE'))
+    return df
+
+
+    
