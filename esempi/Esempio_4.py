@@ -393,4 +393,78 @@ def compute(df):
     return df
 
 
-    
+
+df=Input("/Users/UR00601/Replatforming/datasets/Z01_Projects/A03_Finalta/Ricavi/A001A01_Base_Mol"),
+
+def compute(df):
+
+    # Ricavi da Impieghi : Rateizzazione e Revolving (non riesci a distringuere uno o l'altro)
+    impieghi = df.filter(F.col('co_prodotto').isin('7125', '7126', '7603', '7604', '7606', '7607'))\
+                 .withColumn('Carte_Di_Credito', F.lit('Rateizzazioni_&_Revolving'))\
+                 .withColumn('Mol_da_utilizzare', F.col('mol'))
+
+    # Ricavi da Servizio
+    Interchange_fees = ['400016', '400017', '400018', '400019', '700856',
+                        '700867', '700891', '760216', '760224', '760228',
+                        '760235', '760236', '760238', '760244',  '898748',
+                        '898808', '898815', '898823']
+
+    Cash_advance_ATM_fee = ['700794', '700786', '898743', '898805', '898820']
+
+    Membership_fees = ['700760', '700763', '700806', '700807', '700860', '700862', '760212', '760221',
+                       '760232', '760240', '898740', '898813', '898828', '898835']
+
+    Currency_Exchange_Fee = ['700874', '700789', '700872', '700793', '700873',
+                             '898811', '898818', '898826', '898830', '898832']
+
+    df = df.withColumn('Carte_Di_Credito', F.when(F.col('tp_oper').isin(Interchange_fees), F.lit('Interchange_fees'))\
+                                            .when(F.col('tp_oper').isin(Cash_advance_ATM_fee), F.lit('Cash_advance_ATM_fee'))\
+                                            .when(F.col('tp_oper').isin(Membership_fees), F.lit('Membership_fees'))\
+                                            .when(F.col('tp_oper').isin(Currency_Exchange_Fee), F.lit('Currency_Exchange_Fee'))
+                      )\
+           .withColumn('Mol_da_utilizzare', F.when(F.col('tp_oper').isin(Interchange_fees), F.col('mol'))\
+                                             .when(F.col('tp_oper').isin(Cash_advance_ATM_fee), F.col('mol'))\
+                                             .when(F.col('tp_oper').isin(Membership_fees), F.col('mol'))\
+                                             .when(F.col('tp_oper').isin(Currency_Exchange_Fee), F.col('mol'))
+                      )
+
+    df = df.unionByName(impieghi)
+
+    return df
+
+
+    # add to the output list the current df
+    dfs_to_fill = [counterparty_h_monthly]
+
+    # for every missing date
+    # find the first close available date in the future
+    # filter df to that date in the future
+    # change the date column with the missing date
+    # remove rows born in the future
+    for md in missing_dates:  # noqa
+
+        min_date = min(filter(lambda x: x > md, dates))
+
+        df_tmp = (
+            counterparty_h_monthly
+            .filter(F.col("reference_date_m") == min_date)
+            # only 1,2 Status_indicator are extended (ONLY ACTUAL CLIENTS AND FORMER CLIENTS)
+            .filter(F.col('cntp_regstat_in').isin(['1', '2']))
+            .withColumn("reference_date_m", F.lit(md))
+            # 1901 cases put as None are filtered and not provided to the extension df
+            # keep only cntp opened before the new date
+            # when cntp_last_deal_close_dt (closing_date of the last deal) > dates (new snapshot_dates extended)
+            # and the Status_indicator is 2 (former clients) the closed counterpart is recovered as open
+            .filter(F.col('cntp_open_dt') <= F.col('reference_date_m'))
+            # updating the status of the cntp based on the new date
+            .withColumn('cntp_regstat_in', F.when(
+                (F.col('cntp_last_deal_close_dt') > F.col('reference_date_m')) &
+                (F.col('cntp_regstat_in') == '2'),
+                F.lit('1')).otherwise(F.col('cntp_regstat_in')))  # 11 milion rows
+        )
+
+        dfs_to_fill.append(df_tmp)
+    return reduce(DataFrame.unionByName, dfs_to_fill)
+
+
+
