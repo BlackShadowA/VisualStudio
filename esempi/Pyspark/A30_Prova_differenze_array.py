@@ -27,7 +27,7 @@ data = [("2021-01-01", ["2021-02-01", "2021-03-01"]),
 df = spark.createDataFrame(data, ["data", "array_col"])
 df.show()
 
-
+# per afare array f_merged = df.fillna(0, subset=['margine_0', 'margine_1]).withColumn('array_col', F.array('margine_0', 'margine_1'))
 def diff_in_months(start_date, end_date):
     start_date = datetime.strptime(start_date, '%Y-%m-%d')
     end_date = datetime.strptime(end_date, '%Y-%m-%d')

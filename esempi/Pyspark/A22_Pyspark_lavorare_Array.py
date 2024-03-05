@@ -28,13 +28,13 @@ dati = [
 
 df = spark.createDataFrame(dati, ["chiave", "array_col"])
 
-
+# per afare array f_merged = df.fillna(0, subset=['margine_0', 'margine_1]).withColumn('array_col', F.array('margine_0', 'margine_1'))
 df.show(truncate=False)
 
 @udf(ArrayType(DoubleType()))
-def sommo_ar(array):
+def delta_mol(array):
     differenze = [(array[i+1] / array[i] -1)*100 for i in range(len(array)-1)]
     return differenze
  
-dff = df.withColumn('sommo_uno',sommo_ar(F.col('array_col')))
+dff = df.withColumn('delta_arry',delta_mol(F.col('array_col')))
 dff.show(truncate=False)
