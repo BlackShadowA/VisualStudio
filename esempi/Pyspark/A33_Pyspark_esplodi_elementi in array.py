@@ -27,16 +27,10 @@ dati = [
 ]
 
 df = spark.createDataFrame(dati, ["chiave", "array_col"])
-
-# per afare array f_merged = df.fillna(0, subset=['margine_0', 'margine_1]).withColumn('array_col', F.array('margine_0', 'margine_1'))
 df.show(truncate=False)
 
-@udf(ArrayType(DoubleType()))
-def delta_mol(array):
-    differenze = [(array[i+1] / array[i] -1)*100 if array[i] != 0.0 else 0.0 for i in range(len(array)-1) ]
-    return differenze
- 
-dff = df.withColumn('delta_arry',delta_mol(F.col('array_col')))
-dff.show(truncate=False)
+# adesso mi creo tante colonne quanto sono gli elementi della colona array
+max_length = df.selectExpr("max(size(array_col))").collect()[0][0]
 
-
+df = df.select("*",*[F.col("array_col")[i].alias(f"element_{i+1}") for i in range(max_length)])
+df.show()

@@ -467,4 +467,29 @@ def compute(df):
     return reduce(DataFrame.unionByName, dfs_to_fill)
 
 
+    @udf(ArrayType(DoubleType()))
+    def delta_mol(array):
 
+        array = list(map(float, array))
+        """
+        Divide ogni elemento dell'array per l'elemento consecutivo nell'array.
+        
+        Args:
+            array (list): Lista di decimali
+            
+        Returns:
+            list: Lista di decimali risultante dalla divisione
+        """
+        result = []
+        for i in range(len(array) - 1):
+            # Verifica che l'elemento successivo non sia zero per evitare divisioni per zero
+            current = array[i]
+            next_ = array[i+1]
+            if  current != 0.0:
+                result.append(((next_ - current) / current))
+            else:
+                # Se l'elemento successivo è zero, il risultato della divisione sarà 0
+                result.append(0.0)
+        return result
+
+    dff = dff.withColumn('delta_arry_2',delta_mol(F.col('array_col')))
