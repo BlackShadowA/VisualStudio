@@ -19,16 +19,18 @@ spark = SparkSession\
 print(f"Versione Pyspark = {spark.version}")
 
 my_dict = {
-    'KEY':[10,20,30],
-    'VALORI':['aa','ll','bb']
+    'KEY':[11,22,33],
+    'VALORI':['CC','ll','BB']
 }
 
 ll = spark.createDataFrame(pd.DataFrame(my_dict))
 ll.show()
 
-ll1 = ll.toDF(*[c.lower() for c in ll.columns])
-ll1.show()
+from functools import reduce
 
+actual_df = (reduce(lambda memo_df, col_name: memo_df.withColumn(col_name, F.lower(F.col(col_name))), ll.columns, ll))
+actual_df.show()
 
+# SOMMO LE COLONNE NUMERICHE
 
-spark.stop()
+actual_df = actual_df.select(reduce("KEY", F.lit(0.0), lambda acc, x: acc + x).alias("sum")).show()

@@ -493,3 +493,16 @@ def compute(df):
         return result
 
     dff = dff.withColumn('delta_arry_2',delta_mol(F.col('array_col')))
+
+
+
+anno_corrente=Input("/uci/uci-its/clean/dbc_myagents_conti"),
+)
+def compute(anno_corrente):
+
+    anno_corrente = (
+        anno_corrente
+        .filter(F.col('data') >= '2024-01-01')
+    )
+
+    return anno_corrente
