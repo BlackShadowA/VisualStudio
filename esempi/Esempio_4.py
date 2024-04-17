@@ -495,14 +495,12 @@ def compute(df):
     dff = dff.withColumn('delta_arry_2',delta_mol(F.col('array_col')))
 
 
-
-anno_corrente=Input("/uci/uci-its/clean/dbc_myagents_conti"),
+trans_monthly_h = {f'/uci/customer_engagement_exploration/projects/models/Car_Repository/transactions/data/monthlyagg_trans_feats_{col[1]}_h': Input(f'/uci/customer_engagement_exploration/projects/models/Car_Repository/transactions/data/monthlyagg_trans_feats_{col[1]}_h') for col in _cols_m_list}
+ 
+ 
+#@configure(profile=['SHUFFLE_PARTITIONS_LARGE', 'CLOUD_NUM_EXECUTORS_64', 'CLOUD_EXECUTOR_MEMORY_SMALL'])
+@configure(profile=['DRIVER_CORES_MEDIUM', 'DRIVER_MEMORY_OVERHEAD_LARGE', 'DRIVER_MEMORY_MEDIUM', 'NUM_EXECUTORS_16', 'EXECUTOR_MEMORY_MEDIUM', 'EXECUTOR_CORES_SMALL'])
+@transform_df(
+    Output("ri.foundry.main.dataset.72e3f136-6d66-426e-9fb1-fbd4962b2aa9"),
+    **trans_monthly_h
 )
-def compute(anno_corrente):
-
-    anno_corrente = (
-        anno_corrente
-        .filter(F.col('data') >= '2024-01-01')
-    )
-
-    return anno_corrente
