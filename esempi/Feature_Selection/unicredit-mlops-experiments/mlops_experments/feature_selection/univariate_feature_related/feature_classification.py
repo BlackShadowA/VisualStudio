@@ -1,9 +1,9 @@
 from pyspark.sql import functions as F
-from mlops_experiments.feature_selection.fs_abstract import FeatureSelection
+from mlops_experments.feature_selection.fs_abstract import FeatureSelection
 from typing import List, Union
 import pyspark.sql
 import pandas as pd  # noqa
-from mlops_experiments.utils.internal_control_functions import _convert_pandas_to_pyspark_df
+from utils.internal_control_functions import _convert_pandas_to_pyspark_df
 
 # -------  FEATURE CLASSIFICATION ------ #
 
