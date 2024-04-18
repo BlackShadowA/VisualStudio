@@ -495,12 +495,42 @@ def compute(df):
     dff = dff.withColumn('delta_arry_2',delta_mol(F.col('array_col')))
 
 
-trans_monthly_h = {f'/uci/customer_engagement_exploration/projects/models/Car_Repository/transactions/data/monthlyagg_trans_feats_{col[1]}_h': Input(f'/uci/customer_engagement_exploration/projects/models/Car_Repository/transactions/data/monthlyagg_trans_feats_{col[1]}_h') for col in _cols_m_list}
- 
- 
-#@configure(profile=['SHUFFLE_PARTITIONS_LARGE', 'CLOUD_NUM_EXECUTORS_64', 'CLOUD_EXECUTOR_MEMORY_SMALL'])
-@configure(profile=['DRIVER_CORES_MEDIUM', 'DRIVER_MEMORY_OVERHEAD_LARGE', 'DRIVER_MEMORY_MEDIUM', 'NUM_EXECUTORS_16', 'EXECUTOR_MEMORY_MEDIUM', 'EXECUTOR_CORES_SMALL'])
+
+
+
+
+
+from transforms.api import transform_df, Input, Output
+from feature_selection_classe.univariate.UniFeatureClassification import UniFeatureClassification
+from typing import Dict, Any
+
 @transform_df(
-    Output("ri.foundry.main.dataset.72e3f136-6d66-426e-9fb1-fbd4962b2aa9"),
-    **trans_monthly_h
+    Output("/Users/UR00601/CAR Nuovo/datasets/A02_Feature_Selection/A001A01_Feature_Selection"),
+    df=Input("/Users/UR00601/CAR Nuovo/workbook-output/Feature_selection/Snap"),
 )
+def compute(ctx, df):
+    TARGET_VARIABLE = 'target'
+    key = 'ndg'
+
+    df = df.drop('account__deposit_stock') # è tipo array
+    # escludo le variabili stringa e data 
+    cols_to_drop = [
+                col for col, dtype in df.dtypes if (dtype not in ('int', 'bigint', 'float', 'double')) &  (col not in (key))
+            ]
+
+    FEATURE_CLASSIFICATION_PARAMS: Dict[str, Any] = {
+        "classification_task": True,
+        "clf_distinct_fl": True,
+        "cols_to_drop": cols_to_drop,
+        "discrete_thr": 0.025,
+        "min_distinct_values": 2,
+        "null_perc": 0.95,
+        "std_thr": 0.001,
+        "thr_few_many_nulls": 0.75,
+        "target_col": TARGET_VARIABLE
+        }
+
+    feat_imp = UniFeatureClassification().set_params(**FEATURE_CLASSIFICATION_PARAMS)
+    # mi restituisc el'elenco delle colonne non escluse
+    feats_classifed = feat_imp.compute(ctx, df)
+    return feats_classifed
