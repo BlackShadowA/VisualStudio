@@ -1,9 +1,10 @@
 from pyspark.sql import functions as F
-from fs_abstract import FeatureSelection
+# from fs_abstract import FeatureSelection
+from feature_selection_mio.fs_abstract import FeatureSelection
 from typing import List, Union
 import pyspark.sql
 import pandas as pd  # noqa
-from unicredit_mlops_experiments.utils.internal_control_functions import _convert_pandas_to_pyspark_df
+#from unicredit_mlops_experiments.utils.internal_control_functions import _convert_pandas_to_pyspark_df
 
 # -------  FEATURE CLASSIFICATION ------ #
 
@@ -95,7 +96,7 @@ class UniFeatureClassification(FeatureSelection):
 
         # Convert to PySpark if Pandas DataFrame and drop not needed cols
         # Raise an error if the input is not a 'pyspark.sql.DataFrame' or a 'pd.DataFrame'
-        df_train = _convert_pandas_to_pyspark_df(spark_session, df_train, cols_to_drop)
+        # df_train = _convert_pandas_to_pyspark_df(spark_session, df_train, cols_to_drop)
 
         feat_cols = df_train.drop(target_col).columns
 

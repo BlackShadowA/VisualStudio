@@ -63,7 +63,7 @@ FEATURE_CLASSIFICATION_PARAMS: Dict[str, Any] = {
     }
 
 FEATURE_CLASSIFICATION_METHOD = ExperimentUtils(method_name="nulls_detector").get_feature_selection()
-
+'''
 config_experiment: Dict[str, Any] = {
     'standard': {
         "name": EXPERIMENT_NAME,
@@ -76,7 +76,7 @@ config_experiment: Dict[str, Any] = {
         "must_have_feats": MUST_HAVE_FEATS
         },
 }
-
+'''
 config_experiment: Dict[str, Any] = {
     'standard': {
         "name": EXPERIMENT_NAME,

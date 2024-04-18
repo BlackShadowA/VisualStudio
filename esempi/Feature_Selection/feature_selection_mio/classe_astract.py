@@ -4,7 +4,6 @@ import inspect
 
 # ------- ROOT CLASS ------ #
 
-
 class BaseClass(ABC):
     """Abstract root class to reflect the implementation of a all methods"""
 
