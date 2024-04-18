@@ -34,6 +34,8 @@ import re
 # cerco prima le colonne che contengono _A
 amt = [c for c in df.columns if re.match(r'\w*_A$', c)]
 print(amt)
+# puoi anche usare
+amt = [c for c in df.columns if "_A" in c]
 #sostituisco _A con blanck
 amt_rid = [re.sub('_A$','',s) for s in amt]
 print(amt_rid)

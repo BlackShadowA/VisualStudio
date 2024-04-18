@@ -1,6 +1,5 @@
-from mlops_experments.feature_selection.fs_univariate.univariate_feature_related.feature_classification import UniFeatureClassification
-from utils.internal_control_functions import _ipt_param_check
-
+from unicredit_mlops_experiments.mlops_experments.feature_selection.univariate_feature_related.feature_classification import UniFeatureClassification
+from unicredit_mlops_experiments.utils.internal_control_functions import _ipt_param_check
 # ------- EXPERIMENT UTILS: Configuration file to set up all MLOps experiments ------ #
 
 

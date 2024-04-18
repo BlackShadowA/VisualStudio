@@ -14,13 +14,18 @@ spark = SparkSession\
     .appName("PySpark Feature Selection")\
     .getOrCreate()
     
-    
-df = pd.read_csv('C:\\Travaux_2012\\compact.csv', sep=',')
-#print(df)
+spark.conf.set("spark.sql.debug.maxToStringFields", 1000)
+  
+#df = pd.read_csv('C:\\Travaux_2012\\compact.csv', sep=',')
+df = pd.read_excel("C:\\Travaux_2012\\compact.xlsx")
+print(df)
+
+
 snap = spark.createDataFrame(df)
-snap.show()
-'''
-from Feature_Selection.unicredit_mlops_experiments.experiment import ExperimentUtils
+snap.show(truncate=False)
+
+
+from unicredit_mlops_experiments.experiment import ExperimentUtils
 from typing import Dict, Any
 import lightgbm as lgb
 
@@ -58,8 +63,7 @@ FEATURE_CLASSIFICATION_PARAMS: Dict[str, Any] = {
     }
 
 FEATURE_CLASSIFICATION_METHOD = ExperimentUtils(method_name="nulls_detector").get_feature_selection()
-'''
-'''
+
 config_experiment: Dict[str, Any] = {
     'standard': {
         "name": EXPERIMENT_NAME,
@@ -72,8 +76,7 @@ config_experiment: Dict[str, Any] = {
         "must_have_feats": MUST_HAVE_FEATS
         },
 }
-'''
-'''
+
 config_experiment: Dict[str, Any] = {
     'standard': {
         "name": EXPERIMENT_NAME,
@@ -97,5 +100,5 @@ for _, experiment in config_dict.items():
             train_all_feats
         )
     feats_classifed.show()
-'''
+
 spark.stop()

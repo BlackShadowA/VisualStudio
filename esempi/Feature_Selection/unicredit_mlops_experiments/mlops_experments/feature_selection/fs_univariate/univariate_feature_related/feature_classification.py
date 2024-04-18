@@ -3,7 +3,7 @@ from fs_abstract import FeatureSelection
 from typing import List, Union
 import pyspark.sql
 import pandas as pd  # noqa
-from utils.internal_control_functions import _convert_pandas_to_pyspark_df
+from unicredit_mlops_experiments.utils.internal_control_functions import _convert_pandas_to_pyspark_df
 
 # -------  FEATURE CLASSIFICATION ------ #
 

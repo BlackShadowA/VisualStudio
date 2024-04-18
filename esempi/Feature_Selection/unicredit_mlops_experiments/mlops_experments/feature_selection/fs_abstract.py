@@ -3,7 +3,8 @@ from typing import Any, Dict, Union, List
 import pyspark.sql
 # from sklearn.base import BaseEstimator
 import pandas as pd  # noqa
-from root import BaseClass
+from unicredit_mlops_experiments import root
+from unicredit_mlops_experiments.root import BaseClass
 
 
 # ------- FEATURE SELECTION ------ #
