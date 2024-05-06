@@ -499,38 +499,25 @@ def compute(df):
 
 
 
+    filter_Customer = (
+      (F.col('cust_tp') == 'F') &
+      (F.col('death_dt').isNull()) &
+      (F.col('cust_regstat_in') == '1') &
+      (F.col('cust_status_in') == 'C') &
+      (F.col('busperone_cd').isin(['R', 'P', 'C'])) &
+      (F.col('segm_cd').isin(['4', 'R', 'P', 'I', '9'])) &
+      ((F.col('ptf_mis_tp').isin(['M', 'T', 'R', 'S', 'U', 'P', 'D'])) |
+       (F.col('ptf_mis_tp').isNull()))
+    )
+    
+    from functools import reduce
+    df_array = [
+        tejoud0a_in,
+        tejoud01_in,
+        tejoud2a_in,
+        tejoud3a_in,
+        tejoud4a_in,
+        tejoud5a_in
+    ]
 
-from transforms.api import transform_df, Input, Output
-from feature_selection_classe.univariate.UniFeatureClassification import UniFeatureClassification
-from typing import Dict, Any
-
-@transform_df(
-    Output("/Users/UR00601/CAR Nuovo/datasets/A02_Feature_Selection/A001A01_Feature_Selection"),
-    df=Input("/Users/UR00601/CAR Nuovo/workbook-output/Feature_selection/Snap"),
-)
-def compute(ctx, df):
-    TARGET_VARIABLE = 'target'
-    key = 'ndg'
-
-    df = df.drop('account__deposit_stock') # è tipo array
-    # escludo le variabili stringa e data 
-    cols_to_drop = [
-                col for col, dtype in df.dtypes if (dtype not in ('int', 'bigint', 'float', 'double')) &  (col not in (key))
-            ]
-
-    FEATURE_CLASSIFICATION_PARAMS: Dict[str, Any] = {
-        "classification_task": True,
-        "clf_distinct_fl": True,
-        "cols_to_drop": cols_to_drop,
-        "discrete_thr": 0.025,
-        "min_distinct_values": 2,
-        "null_perc": 0.95,
-        "std_thr": 0.001,
-        "thr_few_many_nulls": 0.75,
-        "target_col": TARGET_VARIABLE
-        }
-
-    feat_imp = UniFeatureClassification().set_params(**FEATURE_CLASSIFICATION_PARAMS)
-    # mi restituisc el'elenco delle colonne non escluse
-    feats_classifed = feat_imp.compute(ctx, df)
-    return feats_classifed
+    df_giota = reduce(DataFrame.union, df_array)
